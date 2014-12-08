@@ -1,34 +1,42 @@
+import string
+
 def CountingMinutes(str): 
-  """Not working for all test cases
-  Need to finish."""
+  """ Return the total number of minutes between two times.
+  if str is 9:00am-10:00am then the output should be 60. 
+  If str is 1:00pm-11:00am the output should be 1320."""
   
-  # clean up the time string a bit
+  # take out colon and dash from time string
   times = str.replace(":"," ").replace("-"," ").split()
-  # extract min/hour values
+  # extract min/hour values and am/pm
   t1_hr = int(times[0])
-  t1_min = times[1]
+  t1_min = times[1][0:2]
+  t1_ap = times[1][-2]
+
   t2_hr = int(times[2])
   t2_min = times[3]
+  t2_ap = times[3][-2]
   
-  # add 12 hrs if time is in pm
-  if t1_min[2] == "p":
+  # add 12 hrs if time is in pm, unless it's 12 pm
+  if t1_ap == "p" and t1_hr != 12:
     t1_hr += 12
-    print "t1_hr is", t1_hr 
-  if t2_min[2] == "p":
+
+  if t2_ap == "p" and t2_hr != 12:
     t2_hr += 12
-    print "t2_hr is", t2_hr 
+
+  if t1_hr == 12 and t1_ap == "a":
+    t1_hr = 0
+  if t2_hr == 12 and t2_ap == "a":
+    t2_hr = 0
   
   tot_min_t1 = 60 * t1_hr + int(t1_min[0:2])
-  print "t1_min is", t1_min[0:2]
   tot_min_t2 = 60 * t2_hr + int(t2_min[0:2])
-  print "t2_min is", t2_min[0:2]
   
-  if tot_min_t2 > tot_min_t1:
-    print "t2 > t1"
-    return tot_min_t2 - tot_min_t1
+  diff = tot_min_t2 - tot_min_t1
+  if diff < 0: # if end time is earlier in the day than start time
+    return abs(diff + 24 * 60)
   else:
-    print "t1 > t2"
-    return 24 * 60 - tot_min_t2 + tot_min_t1
+    return diff
+
 
 def RunLength(someString): 
   """Take the str parameter being passed 
@@ -51,5 +59,24 @@ def RunLength(someString):
     final_str += letter
     counter = 0
   return final_str
+
+def PalindromeTwo(someString):
+  """ Return True if the parameter is a palindrome 
+  (the string is the same forward as it is backward) 
+  otherwise return false. Punctuation should not be considered."""
+  punct = set(string.punctuation)
+  # strip punctuation and spaces + lowercase everything
+  str_orig = ''.join(ch for ch in someString if ch not in punct and ch != ' ').lower()
+  # break the string into a list of chars
+  letters = list(str_orig)
+  # reverse the list
+  letters.reverse()
+  # join it back into a string
+  str_rev = ''.join(letters)
+  # compare reversed string to original
+  if str_rev == str_orig:
+    return True
+  else:
+    return False
 
 
